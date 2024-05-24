@@ -1,0 +1,17 @@
+[tool.poetry]
+name        = 'sf-train'
+version     = '0.1.0'
+description = ''
+authors     = ['Hwanhee Kim <kimsvrkimsvr@gmail.com>']
+license     = 'MIT'
+readme      = 'README.md'
+repository  = 'https://github.com/kimhappy/sf-train'
+
+[tool.poetry.dependencies]
+python  = '^3.10'
+torch   = '^2.3.0'
+librosa = '^0.10.2.post1'
+
+[build-system]
+requires      = ['poetry-core']
+build-backend = 'poetry.core.masonry.api'
