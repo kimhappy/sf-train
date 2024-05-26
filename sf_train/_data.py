@@ -45,7 +45,7 @@ class _Data:
 
         for ti, to in zip(self.train_inputs, self.train_outputs):
             num_chunks    = ti.shape[ 0 ] // chunk_len
-            len_cut       = num_chunks * chunk_len
+            len_cut       = num_chunks    *  chunk_len
             tis           = torch.from_numpy(ti[ :len_cut ].reshape(num_chunks, chunk_len, -1))
             tos           = torch.from_numpy(to[ :len_cut ].reshape(num_chunks, chunk_len))
             train_inputs  = torch.cat((train_inputs , tis), dim = 0) if train_inputs  else tis
