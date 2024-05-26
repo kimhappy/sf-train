@@ -12,6 +12,7 @@ if __name__ == '__main__':
         hidden_size = 64)
 
     train_config = TrainConfig(
+        compile     = True   ,
         batch_size  = 16     ,
         initial_lr  =  0.005 ,
         lr_decay    =  0.0001,

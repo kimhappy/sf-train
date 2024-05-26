@@ -80,6 +80,9 @@ class _Train:
         self.device       = device if device else _best_device()
         self.network.to(self.device)
 
+        if train_config.compile:
+            self.network = torch.compile(self.network)
+
         chunk_len = int(_Train.CHUNK_SEC * self.sample_rate)
         self.tis, self.tos, self.vis, self.vos = data._chunkify(chunk_len)
         self.tis = torch.from_numpy(self.tis).to(self.device)
