@@ -20,6 +20,9 @@ class _Model(nn.Module):
     def detach_hidden(self):
         self.hidden = tuple([h.clone().detach() for h in self.hidden])
 
+    def reset_hidden(self):
+        self.hidden = None
+
     def params(self):
         weight_i = self.state_dict()[ 'rec.weight_ih_l0' ].flatten()
         weight_h = self.state_dict()[ 'rec.weight_hh_l0' ].flatten()

@@ -82,10 +82,10 @@ class _Train:
 
         chunk_len = int(_Train.CHUNK_SEC * self.sample_rate)
         self.tis, self.tos, self.vis, self.vos = data._chunkify(chunk_len)
-        self.tis = self.tis.to(self.device)
-        self.tos = self.tos.to(self.device)
-        self.vis = self.vis.to(self.device)
-        self.vos = self.vos.to(self.device)
+        self.tis = torch.from_numpy(self.tis).to(self.device)
+        self.tos = torch.from_numpy(self.tos).to(self.device)
+        self.vis = torch.from_numpy(self.vis).to(self.device)
+        self.vos = torch.from_numpy(self.vos).to(self.device)
 
     def train(self) -> _TrainResult:
         begin_time = time.time()
@@ -99,6 +99,7 @@ class _Train:
             input_batches  = self.tis[ batch_idxs, :, : ]
             target_batches = self.tos[ batch_idxs, :    ]
 
+            self.network.reset_hidden()
             self.network(input_batches[ :, 0: _Train.INIT_LEN, : ])
             self.network.zero_grad()
 
@@ -119,7 +120,6 @@ class _Train:
                 batch_loss += loss
 
             ep_loss += batch_loss / num_iter
-            self.network.hidden = None
 
         end_time = time.time()
         return _TrainResult(ep_loss / shuffle.shape[ 0 ], end_time - begin_time)
@@ -131,6 +131,7 @@ class _Train:
             output     = torch.empty_like(self.vos)
             num_chunks = self.vos.shape[ 0 ] // _Train.VALI_CHUNK
             remainder  = self.vos.shape[ 0 ] %  _Train.VALI_CHUNK
+            self.network.reset_hidden()
 
             for l in range(num_chunks):
                 begin                = l     * _Train.VALI_CHUNK
@@ -148,7 +149,6 @@ class _Train:
                 output[ begin: end ] = output_chunk
                 self.network.detach_hidden()
 
-            self.network.hidden = None
             loss = self.loss_fn(output, self.vos)
 
         end_time = time.time()

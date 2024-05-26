@@ -38,23 +38,19 @@ class _Data:
         self.vali_outputs.append(output)
 
     def _chunkify(self, chunk_len: int):
-        train_inputs  = None
-        train_outputs = None
-        vali_inputs   = None
-        vali_outputs  = None
+        def _input_chunk(x):
+            num_chunks = x.shape[ 0 ] // chunk_len
+            len_cut    = num_chunks    * chunk_len
+            return x[ :len_cut ].reshape(num_chunks, chunk_len, -1)
 
-        for ti, to in zip(self.train_inputs, self.train_outputs):
-            num_chunks    = ti.shape[ 0 ] // chunk_len
-            len_cut       = num_chunks    *  chunk_len
-            tis           = torch.from_numpy(ti[ :len_cut ].reshape(num_chunks, chunk_len, -1))
-            tos           = torch.from_numpy(to[ :len_cut ].reshape(num_chunks, chunk_len))
-            train_inputs  = torch.cat((train_inputs , tis), dim = 0) if train_inputs  else tis
-            train_outputs = torch.cat((train_outputs, tos), dim = 0) if train_outputs else tos
+        def _output_chunk(x):
+            num_chunks = x.shape[ 0 ] // chunk_len
+            len_cut    = num_chunks    * chunk_len
+            return x[ :len_cut ].reshape(num_chunks, chunk_len)
 
-        for vi, vo in zip(self.vali_inputs, self.vali_outputs):
-            vi           = torch.from_numpy(vi)
-            vo           = torch.from_numpy(vo)
-            vali_inputs  = torch.cat((vali_inputs , vi), dim = 0) if vali_inputs  else vi
-            vali_outputs = torch.cat((vali_outputs, vo), dim = 0) if vali_outputs else vo
+        train_inputs  = np.concatenate(list(map(_input_chunk , self.train_inputs )))
+        train_outputs = np.concatenate(list(map(_output_chunk, self.train_outputs)))
+        vali_inputs   = np.concatenate(                        self.vali_inputs    )
+        vali_outputs  = np.concatenate(                        self.vali_outputs   )
 
         return train_inputs, train_outputs, vali_inputs, vali_outputs
