@@ -1,5 +1,4 @@
 import numpy as np
-import torch
 
 class _Data:
     def __init__(self, num_params: int):
