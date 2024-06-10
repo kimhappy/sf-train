@@ -1,7 +1,8 @@
+from typing import List
+
 class _ModelConfig:
-    def __init__(
-        self               ,
-        sample_rate = 48000,
-        hidden_size =    64):
-        self.sample_rate = sample_rate
-        self.hidden_size = hidden_size
+    def __init__(self, name: str, params: List[str]):
+        self.name        = name
+        self.params      = params
+        assert len(params) <= 4
+        self.hidden_size = 48

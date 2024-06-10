@@ -1,13 +1,13 @@
 import torch
 import torch.nn as nn
 
-class _Model(nn.Module):
+class _LSTMModel(nn.Module):
     def __init__(
         self       ,
         input_size ,
         output_size,
         hidden_size):
-        super(_Model, self).__init__()
+        super(_LSTMModel, self).__init__()
         self.rec    = nn.LSTM  (input_size , hidden_size, batch_first = True)
         self.lin    = nn.Linear(hidden_size, output_size)
         self.hidden = None
